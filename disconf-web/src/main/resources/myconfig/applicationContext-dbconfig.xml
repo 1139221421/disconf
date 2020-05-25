@@ -62,15 +62,12 @@
             </map>
         </property>
         <property name="defaultTargetDataSource" ref="onedb_0"/>
-        <property name="multiDataSourceKeyContext">
-            <ref local="onedbMultiDSKeyContext"/>
-        </property>
+        <property name="multiDataSourceKeyContext" ref="onedbMultiDSKeyContext"/>
     </bean>
 
     <bean id="onedbRouter" class="com.baidu.ub.common.dbmanage.router.IDRouter">
         <property name="prefix" value="vdb_one"/>
-        <property name="dbShardingRule">
-            <ref local="onedbShardingRule"/>
+        <property name="dbShardingRule" ref="onedbShardingRule">
         </property>
     </bean>
     <bean id="onedbShardingRule"
@@ -79,8 +76,7 @@
     </bean>
     <bean id="onedbMultiDSKeyContext"
           class="com.baidu.ub.common.dbmanage.datasource.MultiDataSourceKeyContext">
-        <property name="router">
-            <ref local="onedbRouter"/>
+        <property name="router" ref="onedbRouter">
         </property>
         <property name="dbName" value="oneDB"/>
     </bean>

@@ -1,7 +1,12 @@
 package com.baidu.disconf.web.web.env.controller;
 
-import java.util.List;
-
+import com.baidu.disconf.web.service.env.form.EnvNewForm;
+import com.baidu.disconf.web.service.env.service.EnvMgr;
+import com.baidu.disconf.web.service.env.vo.EnvListVo;
+import com.baidu.disconf.web.web.env.validator.EnvValidator;
+import com.baidu.dsp.common.constant.WebConstants;
+import com.baidu.dsp.common.controller.BaseController;
+import com.baidu.dsp.common.vo.JsonObjectBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,11 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.baidu.disconf.web.service.env.service.EnvMgr;
-import com.baidu.disconf.web.service.env.vo.EnvListVo;
-import com.baidu.dsp.common.constant.WebConstants;
-import com.baidu.dsp.common.controller.BaseController;
-import com.baidu.dsp.common.vo.JsonObjectBase;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author liaoqiqi
@@ -29,9 +31,11 @@ public class EnvController extends BaseController {
     @Autowired
     private EnvMgr envMgr;
 
+    @Autowired
+    private EnvValidator envValidator;
+
     /**
      * list
-     *
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -41,6 +45,23 @@ public class EnvController extends BaseController {
         List<EnvListVo> envListVos = envMgr.getVoList();
 
         return buildListSuccess(envListVos, envListVos.size());
+    }
+
+    /**
+     * create
+     * @return
+     */
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonObjectBase create(@Valid EnvNewForm envNewForm) {
+
+        LOG.info(envNewForm.toString());
+
+        envValidator.validateCreate(envNewForm);
+
+        envMgr.create(envNewForm);
+
+        return buildSuccess("创建成功");
     }
 
 }

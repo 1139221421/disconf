@@ -1,11 +1,8 @@
 package com.baidu.disconf.web.config;
 
-import org.springframework.stereotype.Service;
-
 /**
  * @author knightliao
  */
-@Service
 public class ApplicationPropertyConfig {
 
     //

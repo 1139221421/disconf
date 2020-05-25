@@ -1,5 +1,6 @@
 package com.baidu.disconf.web.web.config.validator;
 
+import com.baidu.disconf.web.service.config.form.ConfCopyItemForm;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -202,6 +203,30 @@ public class ConfigValidator {
 
         //
         validateAppAuth(config.getAppId());
+    }
+
+    /**
+     * 校验复制 配置
+     *
+     * @param confCopyItemForm
+     */
+    public void validateCopy(ConfCopyItemForm confCopyItemForm) {
+
+        //
+        // app
+        //
+        App app = appMgr.getById(confCopyItemForm.getAppId());
+        if (app == null) {
+            throw new FieldException(ConfNewForm.APPID, "app.not.exist", null);
+        }
+
+        //
+        // env
+        //
+        Env env = envMgr.getById(confCopyItemForm.getEnvId());
+        if (env == null) {
+            throw new FieldException(ConfNewForm.ENVID, "env.not.exist", null);
+        }
     }
 
 }

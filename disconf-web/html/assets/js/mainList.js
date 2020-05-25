@@ -217,10 +217,10 @@
                 + '" data-placement="left">' + item.machineSize + '台 '
                 + isRight + '</a>'
 
-            return Util.string.format(mainTpl,'', item.appId,
-                item.version, item.envId, item.envName, type, item.key,
+            return Util.string.format(mainTpl,'', item.appName,
+                item.version, item.envId, item.envName, item.key,
                 item.createTime, item.modifyTime, item.value, link,
-                del_link, i + 1, downloadlink, data_fetch_url, machine_url);
+                del_link, i + 1, downloadlink, item.value);
         }
     }
 
@@ -372,6 +372,32 @@
         }
     }
 
+    function syncToZK() {
+        // 参数不正确，清空列表
+        if (appId == -1 || envId == -1 || version == "#") {
+            $("#zk_deploy_info_pre").html("请检查当前配置情况!");
+            return;
+        }
+
+        var base_url = "/api/zoo/syncToZK?appId=" + appId + "&envId=" + envId
+            + "&version=" + version;
+
+        $.ajax({
+            type: "GET",
+            url: base_url
+        }).done(function (data) {
+            if (data.success === "true") {
+                var result = data.result;
+                if(result){
+                    alert("同步成功!")
+                }else{
+                    alert("同步失败!");
+                }
+            }
+        });
+
+    }
+
     //
     // 获取ZK数据信息
     //
@@ -406,6 +432,9 @@
     $("#zk_deploy_button").on('click', function () {
         $("#zk_deploy_info").toggle();
         fetchZkDeploy();
+    });
+    $("#zk_sync_button").on('click', function () {
+        syncToZK();
     });
 
 })(jQuery);

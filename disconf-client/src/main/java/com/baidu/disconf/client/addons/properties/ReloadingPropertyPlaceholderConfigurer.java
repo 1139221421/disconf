@@ -1,22 +1,8 @@
 package com.baidu.disconf.client.addons.properties;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanWrapper;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.PropertyValue;
+import org.springframework.beans.*;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -28,6 +14,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringValueResolver;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 具有 reloadable 的 property bean
@@ -59,9 +48,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
      * @param strVal
      * @param props
      * @param visitedPlaceholders
-     *
      * @return
-     *
      * @throws BeanDefinitionStoreException
      */
     protected String parseStringValue(String strVal, Properties props, Set visitedPlaceholders)
@@ -94,14 +81,13 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
             }
         }
         // then, business as usual. no recursive reloading placeholders please.
-        return super.parseStringValue(buf.toString(), props, visitedPlaceholders);
+        return parseStringValue(buf.toString(), props, visitedPlaceholders);
     }
 
     /**
      * @param currentBeanName     当前的bean name
      * @param currentPropertyName 当前它的属性
      * @param orgStrVal           原来的值
-     *
      * @return
      */
     private DynamicProperty getDynamic(String currentBeanName, String currentPropertyName, String orgStrVal) {
@@ -120,9 +106,9 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
      * merge property and record last merge
      *
      * @return
-     *
      * @throws IOException
      */
+    @Override
     protected Properties mergeProperties() throws IOException {
         Properties properties = super.mergeProperties();
         this.lastMergedProperties = properties;
@@ -134,6 +120,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
      *
      * @param event
      */
+    @Override
     public void propertiesReloaded(PropertiesReloadedEvent event) {
 
         Properties oldProperties = lastMergedProperties;
@@ -293,6 +280,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
             return propertyName;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -313,6 +301,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
             return true;
         }
 
+        @Override
         public int hashCode() {
             int result;
             result = (beanName != null ? beanName.hashCode() : 0);
@@ -364,6 +353,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
      * copy & paste, just so we can insert our own visitor.
      * 启动时 进行配置的解析
      */
+    @Override
     protected void processProperties(ConfigurableListableBeanFactory beanFactoryToProcess, Properties props)
             throws BeansException {
 
@@ -403,6 +393,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
      * afterPropertiesSet
      * 将自己 添加 property listener
      */
+    @Override
     public void afterPropertiesSet() {
         for (Properties properties : propertiesArray) {
             if (properties instanceof ReloadableProperties) {
@@ -418,6 +409,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
      *
      * @throws Exception
      */
+    @Override
     public void destroy() throws Exception {
         for (Properties properties : propertiesArray) {
             if (properties instanceof ReloadableProperties) {
@@ -438,6 +430,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
             this.props = props;
         }
 
+        @Override
         protected void visitPropertyValues(MutablePropertyValues pvs) {
             PropertyValue[] pvArray = pvs.getPropertyValues();
             for (PropertyValue pv : pvArray) {
@@ -453,6 +446,7 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
             }
         }
 
+        @Override
         protected String resolveStringValue(String strVal) throws BeansException {
             return parseStringValue(strVal, this.props, new HashSet());
         }
@@ -480,34 +474,41 @@ public class ReloadingPropertyPlaceholderConfigurer extends DefaultPropertyPlace
      */
     private ApplicationContext applicationContext;
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
+    @Override
     public void setProperties(Properties properties) {
-        setPropertiesArray(new Properties[] {properties});
+        setPropertiesArray(new Properties[]{properties});
     }
 
+    @Override
     public void setPropertiesArray(Properties[] propertiesArray) {
         this.propertiesArray = propertiesArray;
         super.setPropertiesArray(propertiesArray);
     }
 
+    @Override
     public void setPlaceholderPrefix(String placeholderPrefix) {
         this.placeholderPrefix = placeholderPrefix;
         super.setPlaceholderPrefix(placeholderPrefix);
     }
 
+    @Override
     public void setPlaceholderSuffix(String placeholderSuffix) {
         this.placeholderSuffix = placeholderSuffix;
         super.setPlaceholderSuffix(placeholderPrefix);
     }
 
+    @Override
     public void setBeanName(String beanName) {
         this.beanName = beanName;
         super.setBeanName(beanName);
     }
 
+    @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
         super.setBeanFactory(beanFactory);

@@ -1,10 +1,5 @@
 package com.baidu.disconf.web.web.auth.login.impl;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.baidu.disconf.web.service.user.bo.User;
 import com.baidu.disconf.web.service.user.constant.UserConstant;
 import com.baidu.disconf.web.service.user.dto.Visitor;
@@ -13,6 +8,10 @@ import com.baidu.disconf.web.web.auth.login.RedisLogin;
 import com.baidu.ub.common.commons.ThreadContext;
 import com.github.knightliao.apollo.redis.RedisCacheManager;
 import com.github.knightliao.apollo.utils.web.CookieUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author liaoqiqi
@@ -120,6 +119,7 @@ public class RedisLoginImpl implements RedisLogin {
      * @param session
      * @param visitor
      */
+    @Override
     public void updateSessionVisitor(HttpSession session, Visitor visitor) {
 
         if (visitor != null) {

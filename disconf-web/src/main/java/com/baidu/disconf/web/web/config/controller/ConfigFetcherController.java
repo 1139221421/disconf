@@ -2,8 +2,16 @@ package com.baidu.disconf.web.web.config.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.baidu.dsp.common.vo.JsonObject;
+import com.baidu.dsp.common.vo.JsonObjectUtils;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.gson.JsonParser;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +45,7 @@ import com.baidu.dsp.common.vo.JsonObjectBase;
  */
 @Controller
 @RequestMapping(WebConstants.API_PREFIX + "/config")
-public class ConfigFetcherController extends BaseController {
+public class    ConfigFetcherController extends BaseController {
 
     protected static final Logger LOG = LoggerFactory.getLogger(ConfigFetcherController.class);
 
@@ -71,6 +79,17 @@ public class ConfigFetcherController extends BaseController {
         return getListImp(confForm, false);
     }
 
+    @NoAuth
+    @RequestMapping(value = "/listConfig", method = RequestMethod.GET)
+    @ResponseBody
+    public Map listConfig(ConfForm confForm) {
+        List<Config> configs = getConfigs(confForm, true);
+        Map map = new HashMap(configs.size());
+        for (Config config : configs) {
+            map.put(config.getName(),config.getValue());
+        }
+        return map;
+    }
     /**
      * 获取配置项 Item
      *
@@ -176,17 +195,17 @@ public class ConfigFetcherController extends BaseController {
 
     private JsonObjectBase getListImp(ConfForm confForm, boolean hasValue) {
         LOG.info(confForm.toString());
+        List<Config> configs = getConfigs(confForm,hasValue);
+        return buildListSuccess(configs, configs.size());
+    }
 
+    private List<Config> getConfigs(ConfForm confForm,boolean hasValue) {
         //
         // 校验
         //
         ConfigFullModel configModel = configValidator4Fetch.verifyConfForm(confForm, true);
-
-        List<Config> configs =
-                configFetchMgr.getConfListByParameter(configModel.getApp().getId(), configModel.getEnv().getId(),
-                        configModel.getVersion(), hasValue);
-
-        return buildListSuccess(configs, configs.size());
+        return configFetchMgr.getConfListByParameter(configModel.getApp().getId(), configModel.getEnv().getId(),
+                configModel.getVersion(), hasValue);
     }
 
 }

@@ -33,7 +33,7 @@
                     </list>
                 </property>
                 <property name="XONE_COOKIE_DOMAIN_STRING">
-                    <value>${domain}</value>
+                    <value>disconf.com</value>
                 </property>
             </bean>
         </mvc:interceptor>

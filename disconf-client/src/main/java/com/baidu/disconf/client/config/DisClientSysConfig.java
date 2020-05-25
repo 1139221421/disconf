@@ -65,6 +65,12 @@ public class DisClientSysConfig {
     public String CONF_SERVER_STORE_ACTION;
 
     /**
+     * 获取初始化propertiesurl
+     */
+    @DisInnerConfigAnnotation(name="disconf.conf_server_get_all_action")
+    public String CONF_SERVER_GET_ALL_ACTION;
+
+    /**
      * STORE URL
      *
      * @author

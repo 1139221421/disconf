@@ -1,12 +1,5 @@
 package com.baidu.disconf.web.test.common;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.URL;
-
-import javax.sql.DataSource;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
+
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URL;
 
 /**
  * @author liaoqiqi
@@ -28,10 +26,11 @@ public abstract class AbstractTestCase extends AbstractTransactionalJUnit4Spring
     /**
      * 业务数据库
      */
+    @Override
     @Autowired
     @Qualifier(value = "dataSource2")
     public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        // this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     private static final String TEST_DATA_SQL_BASE_PATH = "sql/testdata/1_0_0/";

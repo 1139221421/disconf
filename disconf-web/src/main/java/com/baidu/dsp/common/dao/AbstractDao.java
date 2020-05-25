@@ -1,29 +1,22 @@
 package com.baidu.dsp.common.dao;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import com.baidu.ub.common.db.DaoPage;
 import com.baidu.ub.common.db.DaoPageResult;
 import com.baidu.unbiz.common.genericdao.dao.GenericDao;
 import com.baidu.unbiz.common.genericdao.operator.Match;
 import com.baidu.unbiz.common.genericdao.operator.Modify;
 import com.baidu.unbiz.common.genericdao.operator.Order;
-import com.baidu.unbiz.common.genericdao.param.BetweenParam;
-import com.baidu.unbiz.common.genericdao.param.ExpressionParam;
-import com.baidu.unbiz.common.genericdao.param.GreaterThanParam;
-import com.baidu.unbiz.common.genericdao.param.IncrParam;
-import com.baidu.unbiz.common.genericdao.param.LessThanParam;
-import com.baidu.unbiz.common.genericdao.param.LikeParam;
-import com.baidu.unbiz.common.genericdao.param.NotParam;
+import com.baidu.unbiz.common.genericdao.param.*;
 import com.github.knightliao.apollo.db.bo.BaseObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  */
@@ -33,11 +26,13 @@ public abstract class AbstractDao<KEY extends Serializable, ENTITY extends BaseO
     protected static final Logger LOG = LoggerFactory.getLogger(AbstractDao.class);
 
     @Override
-    @Resource(name = "onedbJdbcTemplate")
+    @Autowired
+    @Qualifier("onedbJdbcTemplate")
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         super.setJdbcTemplate(jdbcTemplate);
     }
 
+    @Override
     public KEY getNextId() {
         // 好像没用到@Sequence注解
         return null;

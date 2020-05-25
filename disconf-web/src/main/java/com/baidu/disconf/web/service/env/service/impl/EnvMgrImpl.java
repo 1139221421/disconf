@@ -1,11 +1,10 @@
 package com.baidu.disconf.web.service.env.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+import com.baidu.disconf.web.service.env.form.EnvNewForm;
+import com.baidu.dsp.common.constant.DataFormatConstants;
+import com.github.knightliao.apollo.utils.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +12,8 @@ import com.baidu.disconf.web.service.env.bo.Env;
 import com.baidu.disconf.web.service.env.dao.EnvDao;
 import com.baidu.disconf.web.service.env.service.EnvMgr;
 import com.baidu.disconf.web.service.env.vo.EnvListVo;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author liaoqiqi
@@ -78,6 +79,20 @@ public class EnvMgrImpl implements EnvMgr {
     @Override
     public List<Env> getList() {
         return envDao.findAll();
+    }
+
+    /**
+     * create env
+     * @param envNew
+     *
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public Env create(EnvNewForm envNew) {
+        Env env = new Env();
+        env.setName(envNew.getEnv());
+        return envDao.create(env);
     }
 
 }

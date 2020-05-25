@@ -58,7 +58,7 @@ public class ZookeeperDriverImpl implements ZooKeeperDriver, InitializingBean, D
         //
         String baseUrlString = ZooPathMgr.getZooBaseUrl(zooConfig.getZookeeperUrlPrefix(), app, env, version);
 
-        String path = "";
+        String path;
         if (disConfigTypeEnum.equals(DisConfigTypeEnum.ITEM)) {
 
             path = ZooPathMgr.getItemZooPath(baseUrlString);
@@ -69,18 +69,20 @@ public class ZookeeperDriverImpl implements ZooKeeperDriver, InitializingBean, D
         try {
 
             path = ZooPathMgr.joinPath(path, key);
-
-            boolean isExist = ZookeeperMgr.getInstance().exists(path);
-            if (!isExist) {
-
-                LOG.info(path + " not exist. not update ZK.");
-
-            } else {
-                //
-                // 通知
-                //
-                ZookeeperMgr.getInstance().writePersistentUrl(path, value);
-            }
+            //直接向zk里节点写数据，有则更新
+            LOG.info("create or update item path:{} and data:{}",path,value);
+            ZookeeperMgr.getInstance().writePersistentUrl(path, value);
+//            boolean isExist = ZookeeperMgr.getInstance().exists(path);
+//            if (!isExist) {
+//
+//                LOG.info(path + " not exist. not update ZK.");
+//
+//            } else {
+//                //
+//                // 通知
+//                //
+//                ZookeeperMgr.getInstance().writePersistentUrl(path, value);
+//            }
 
         } catch (Exception e) {
 

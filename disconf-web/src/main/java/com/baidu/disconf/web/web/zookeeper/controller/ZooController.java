@@ -2,6 +2,12 @@ package com.baidu.disconf.web.web.zookeeper.controller;
 
 import javax.validation.Valid;
 
+import com.baidu.disconf.core.common.zookeeper.ZookeeperMgr;
+import com.baidu.disconf.web.innerapi.zookeeper.ZooKeeperDriver;
+import com.baidu.disconf.web.innerapi.zookeeper.impl.ZookeeperDriverImpl;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +27,9 @@ import com.baidu.dsp.common.annotation.NoAuth;
 import com.baidu.dsp.common.constant.WebConstants;
 import com.baidu.dsp.common.controller.BaseController;
 import com.baidu.dsp.common.vo.JsonObjectBase;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Zoo API
@@ -96,5 +105,34 @@ public class ZooController extends BaseController {
                 zkDeployForm.getVersion());
 
         return buildSuccess("hostInfo", data);
+    }
+
+    /**
+     * 同步至ZK中
+     * @param zkDeployForm
+     * @return
+     */
+    @RequestMapping(value = "/syncToZK", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonObjectBase syncToZK(@Valid ZkDeployForm zkDeployForm){
+        LOG.info("同步配置到zk中请求参数:{}",zkDeployForm.toString());
+        ConfigFullModel configFullModel = zkDeployValidator.verify(zkDeployForm);
+        boolean b = zkDeployMgr.SyncToZk(configFullModel);
+        return buildSuccess(b);
+    }
+
+    public static void main(String[] args)throws Exception {
+        String url="118.24.101.162:2181";
+        String prefix="/disconf/file_0.0.1_rd";
+
+        ZookeeperMgr instance = ZookeeperMgr.getInstance();
+        instance.init(url,prefix,true);
+        List<String> children = instance.getZk()
+                .getChildren(prefix+"/item", false);
+    for(String a :children){
+        instance.deleteNode(prefix+"/item/"+a);
+        System.out.println(a);
+    }
+        TimeUnit.SECONDS.sleep(20);
     }
 }

@@ -17,19 +17,20 @@
  */
 package org.apache.zookeeper.recipes.lock;
 
-import static org.apache.zookeeper.CreateMode.EPHEMERAL_SEQUENTIAL;
-
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import org.apache.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.ACL;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import static org.apache.zookeeper.CreateMode.EPHEMERAL_SEQUENTIAL;
 
 /**
  * A <a href="package.html">protocol to implement an exclusive
@@ -40,7 +41,7 @@ import org.apache.zookeeper.data.Stat;
  * by calling {@link #isOwner()}
  */
 public class WriteLock extends ProtocolSupport {
-    private static final Logger LOG = Logger.getLogger(WriteLock.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WriteLock.class);
 
     private final String dir;
     private String id;
@@ -117,6 +118,7 @@ public class WriteLock extends ProtocolSupport {
             try {
 
                 ZooKeeperOperation zopdel = new ZooKeeperOperation() {
+                    @Override
                     public boolean execute() throws KeeperException, InterruptedException {
                         zookeeper.delete(id, -1);
                         return Boolean.TRUE;
@@ -148,10 +150,11 @@ public class WriteLock extends ProtocolSupport {
      * my predecessor
      */
     private class LockWatcher implements Watcher {
+        @Override
         public void process(WatchedEvent event) {
             // lets either become the leader or watch the new/updated node
             LOG.debug("Watcher fired on path: " + event.getPath() + " state: " +
-                          event.getState() + " type " + event.getType());
+                    event.getState() + " type " + event.getType());
             try {
                 lock();
             } catch (Exception e) {
@@ -204,6 +207,7 @@ public class WriteLock extends ProtocolSupport {
          *
          * @return if the command was successful or not
          */
+        @Override
         public boolean execute() throws KeeperException, InterruptedException {
             do {
                 if (id == null) {

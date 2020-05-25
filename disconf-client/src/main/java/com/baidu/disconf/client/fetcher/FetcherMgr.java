@@ -1,5 +1,7 @@
 package com.baidu.disconf.client.fetcher;
 
+import java.util.Properties;
+
 /**
  * 下载模块
  *
@@ -12,6 +14,9 @@ public interface FetcherMgr {
      * 根据 URL 从远程 获取Value值
      */
     String getValueFromServer(String url) throws Exception;
+
+
+    Properties getAllItem()throws Exception;
 
     /**
      * 下载配置文件, remoteUrl是目标 url, 下载到预定义的文件夹，并 下载到 targetDirPath 目录下

@@ -1,21 +1,24 @@
 package com.baidu.disconf.web.service.config.service;
 
-import java.io.File;
-import java.util.List;
-
 import com.baidu.disconf.core.common.constants.DisConfigTypeEnum;
 import com.baidu.disconf.web.service.config.bo.Config;
+import com.baidu.disconf.web.service.config.form.ConfCopyItemForm;
 import com.baidu.disconf.web.service.config.form.ConfListForm;
 import com.baidu.disconf.web.service.config.form.ConfNewItemForm;
 import com.baidu.disconf.web.service.config.vo.ConfListVo;
 import com.baidu.disconf.web.service.config.vo.MachineListVo;
 import com.baidu.ub.common.db.DaoPageResult;
 
+import java.io.File;
+import java.util.List;
+
 /**
  * @author liaoqiqi
  * @version 2014-6-16
  */
 public interface ConfigMgr {
+
+    List<Config> getConfigByCondition(Long appId, Long envId, String version);
 
     /**
      * @param
@@ -96,5 +99,12 @@ public interface ConfigMgr {
      * @return
      */
     List<File> getDisconfFileList(ConfListForm confListForm);
+
+    /**
+      * 复制
+      *
+      * @param confCopyItemForm
+      */
+     void copyConfig(ConfCopyItemForm confCopyItemForm);
 
 }

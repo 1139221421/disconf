@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.baidu.disconf.core.common.constants.DisConfigTypeEnum;
 import com.baidu.disconf.web.service.zookeeper.dto.ZkDisconfData;
+import com.baidu.disconf.web.web.config.dto.ConfigFullModel;
 
 /**
  * @author liaoqiqi
@@ -40,4 +41,6 @@ public interface ZkDeployMgr {
      */
     ZkDisconfData getZkDisconfData(String app, String env, String version, DisConfigTypeEnum disConfigTypeEnum,
                                    String keyName);
+
+    boolean SyncToZk(ConfigFullModel configFullModel);
 }

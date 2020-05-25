@@ -3,7 +3,12 @@ package com.baidu.disconf.client.fetcher.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
+import com.baidu.disconf.client.config.DisClientConfig;
+import com.baidu.disconf.client.config.DisClientSysConfig;
+import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +86,22 @@ public class FetcherMgrImpl implements FetcherMgr {
         }
 
         return confItemVo.getValue();
+    }
+
+    @Override
+    public Properties getAllItem()throws Exception{
+        String url = DisClientSysConfig.getInstance().CONF_SERVER_GET_ALL_ACTION
+                +"?app=" + DisClientConfig.getInstance().APP + "&env=" + DisClientConfig.getInstance().ENV
+                + "&version=" + DisClientConfig.getInstance().VERSION;
+
+        // 远程地址
+        RemoteUrl remoteUrl = new RemoteUrl(url, hostList);
+
+        Map map = restfulMgr.getJsonData(Map.class, remoteUrl, retryTime, retrySleepSeconds);
+        LOGGER.debug("remote server return: " + map.toString());
+        Properties properties = MapUtils.toProperties(map);
+        //  Properties properties = new Properties(map)
+        return properties;
     }
 
     /**

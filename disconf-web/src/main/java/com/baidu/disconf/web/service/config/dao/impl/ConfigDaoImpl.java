@@ -33,12 +33,9 @@ public class ConfigDaoImpl extends AbstractDao<Long, Config> implements ConfigDa
      *
      */
     @Override
-    public Config getByParameter(Long appId, Long envId, String version, String key,
-                                 DisConfigTypeEnum disConfigTypeEnum) {
+    public Config getByParameter(Long appId, Long envId, String version, String key, DisConfigTypeEnum disConfigTypeEnum) {
 
-        return findOne(new Match(Columns.APP_ID, appId), new Match(Columns.ENV_ID, envId),
-                new Match(Columns.VERSION, version), new Match(Columns.TYPE, disConfigTypeEnum.getType()),
-                new Match(Columns.NAME, key), new Match(Columns.STATUS, Constants.STATUS_NORMAL));
+        return findOne(new Match(Columns.APP_ID, appId), new Match(Columns.ENV_ID, envId), new Match(Columns.VERSION, version), new Match(Columns.TYPE, disConfigTypeEnum.getType()), new Match(Columns.NAME, key), new Match(Columns.STATUS, Constants.STATUS_NORMAL));
     }
 
     /**
@@ -50,8 +47,7 @@ public class ConfigDaoImpl extends AbstractDao<Long, Config> implements ConfigDa
             return find(new Match(Columns.APP_ID, appId), new Match(Columns.STATUS, Constants.STATUS_NORMAL));
         } else {
 
-            return find(new Match(Columns.APP_ID, appId), new Match(Columns.ENV_ID, envId),
-                    new Match(Columns.STATUS, Constants.STATUS_NORMAL));
+            return find(new Match(Columns.APP_ID, appId), new Match(Columns.ENV_ID, envId), new Match(Columns.STATUS, Constants.STATUS_NORMAL));
 
         }
     }
@@ -90,8 +86,7 @@ public class ConfigDaoImpl extends AbstractDao<Long, Config> implements ConfigDa
         if (hasValue) {
             return find(matchs, new ArrayList<Order>());
         } else {
-            return findColumns(matchs, new String[] {Columns.CONFIG_ID, Columns.TYPE, Columns.NAME, Columns.CREATE_TIME
-                    , Columns.UPDATE_TIME, Columns.STATUS, Columns.APP_ID, Columns.ENV_ID, Columns.VERSION});
+            return findColumns(matchs, new String[]{Columns.CONFIG_ID, Columns.TYPE, Columns.NAME, Columns.CREATE_TIME, Columns.UPDATE_TIME, Columns.STATUS, Columns.APP_ID, Columns.ENV_ID, Columns.VERSION});
         }
     }
 
@@ -128,5 +123,18 @@ public class ConfigDaoImpl extends AbstractDao<Long, Config> implements ConfigDa
     public String getValue(Long configId) {
         Config config = get(configId);
         return config.getValue();
+    }
+
+    /**
+     * 复制的时候，删除这个环境 该app对应的版本
+     */
+    @Override
+    public void deleteByParam(Long envId, Long appId, String version) {
+        String curTime = DateUtils.format(new Date(), DataFormatConstants.COMMON_TIME_FORMAT);
+        List<Modify> modifyList = new ArrayList<Modify>();
+        modifyList.add(modify(Columns.STATUS, Constants.STATUS_DELETE));
+        modifyList.add(modify(Columns.UPDATE_TIME, curTime));
+
+        update(modifyList, match(Columns.ENV_ID, envId), match(Columns.APP_ID, appId), match(Columns.VERSION, version), match(Columns.STATUS, Constants.STATUS_NORMAL));
     }
 }

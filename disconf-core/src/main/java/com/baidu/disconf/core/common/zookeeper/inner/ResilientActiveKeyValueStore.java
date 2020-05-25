@@ -62,7 +62,6 @@ public class ResilientActiveKeyValueStore extends ConnectionWatcher {
                 if (stat == null) {
 
                     zk.create(path, value.getBytes(CHARSET), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
-
                 } else {
 
                     zk.setData(path, value.getBytes(CHARSET), stat.getVersion());

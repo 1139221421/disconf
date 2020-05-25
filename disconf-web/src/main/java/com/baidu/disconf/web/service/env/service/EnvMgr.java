@@ -1,11 +1,12 @@
 package com.baidu.disconf.web.service.env.service;
 
+import com.baidu.disconf.web.service.env.bo.Env;
+import com.baidu.disconf.web.service.env.form.EnvNewForm;
+import com.baidu.disconf.web.service.env.vo.EnvListVo;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import com.baidu.disconf.web.service.env.bo.Env;
-import com.baidu.disconf.web.service.env.vo.EnvListVo;
 
 /**
  * @author liaoqiqi
@@ -40,4 +41,13 @@ public interface EnvMgr {
      * @return
      */
     Env getById(Long id);
+
+    /**
+     * 生成一个ENV
+     *
+     * @param envNew
+     *
+     * @return
+     */
+    Env create(EnvNewForm envNew);
 }

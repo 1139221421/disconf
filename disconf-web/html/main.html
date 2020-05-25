@@ -89,7 +89,7 @@
 
 
 <div id="Wrapper" class="clearfix">
-    <div id="Main" style="margin-top:50px;">
+    <div id="Main" style="margin-top:50px;margin-left: 10px;width: 1280px;align:center;">
         <div class="container-fluid">
             <div class="row-fluid" style="min-height:400px;">
                 <div class="sidebar span2" style="float:left;overflow:visible;">
@@ -105,6 +105,14 @@
                             <!--envroment list-->
                             <ul id="envChoice" class="nav nav-pills nav-stacked" style="margin-top:20px;">
                             </ul>
+                            <a id="add_env" href="/newenv.html" class="btn-small btn-primary"
+                                style="float:left;margin-right:5px;" title="" type="button">
+                                 <b>新建环境</b>
+                             </a>
+                            <a id="copy_env" href="/copyconfig.html" class="btn-small btn-primary"
+                                style="float:left;margin-right:5px;" title="" type="button">
+                                 <b>复制环境</b>
+                             </a>
 
                 </div>
                 <div class="span10" style="float:left">
@@ -120,7 +128,11 @@
                                 </span>
                                 <span id="app_info" href="#" class="muted" style="float:left" title="" type="">
                                 </span>
-                        <a id="zk_deploy_button" href="#" class="btn-small btn-primary" style="float:right;" title=""
+                        <a id="zk_sync_button" href="#" class="btn-small btn-primary" style="float:right;" title=""
+                           type="button">
+                            <b>同步到ZK</b>
+                        </a>
+                        <a id="zk_deploy_button" href="#" class="btn-small btn-primary" style="float:right;margin-right:5px;" title=""
                            type="button">
                             <b>ZK部署情况</b>
                         </a>
@@ -148,7 +160,6 @@
                                     <td>APP</td>
                                     <td>KEY</td>
                                     <td>配置内容</td>
-                                    <td>实例列表</td>
                                     <td>修改时间</td>
                                     <td>操作</td>
                                 </tr>
@@ -165,13 +176,13 @@
                 <div id="tbodyTpl" class="hide" style="width:0px;">
                     <table>
                         <tr>
-                            <td>{12}</td>
-                            <td style="max-width:100px">{1}</td>
-                            <td style="max-width:100px">{6} &nbsp; {5}</td>
-                            <td>{14}</td>
-                            <td>{15}</td>
-                            <td>{8}</td>
-                            <td>{10} &nbsp; {11} &nbsp; {13} &nbsp; </td>
+                            <td>{11}</td>
+                            <td >{1}</td>
+                            <td style="max-width:70px">{5}</td>
+                            <td style="max-width:80px">{8}</td>
+                            <!--<td>{15}</td>-->
+                            <td>{7}</td>
+                            <td>{9} &nbsp; {10} &nbsp; {12} &nbsp; </td>
                         </tr>
                     </table>
                 </div>

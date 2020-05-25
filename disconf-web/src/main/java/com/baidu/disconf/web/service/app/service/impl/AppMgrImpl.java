@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.baidu.disconf.core.common.zookeeper.ZookeeperMgr;
+import com.baidu.disconf.web.innerapi.zookeeper.ZooKeeperDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -38,6 +40,9 @@ public class AppMgrImpl implements AppMgr {
 
     @Autowired
     private UserMgr userMgr;
+
+    @Autowired
+    ZooKeeperDriver zooKeeperDriver;
 
     /**
      *
@@ -103,7 +108,6 @@ public class AppMgrImpl implements AppMgr {
         String curTime = DateUtils.format(new Date(), DataFormatConstants.COMMON_TIME_FORMAT);
         app.setCreateTime(curTime);
         app.setUpdateTime(curTime);
-
         //
         return appDao.create(app);
     }

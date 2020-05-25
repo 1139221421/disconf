@@ -1,9 +1,9 @@
 package com.baidu.disconf.web.service.roleres.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import com.baidu.disconf.web.service.roleres.constant.RoleResourceConstant;
+import com.baidu.disconf.web.service.user.dto.Visitor;
+import com.baidu.dsp.common.exception.AccessDeniedException;
+import com.baidu.ub.common.commons.ThreadContext;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,10 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.baidu.disconf.web.service.roleres.constant.RoleResourceConstant;
-import com.baidu.disconf.web.service.user.dto.Visitor;
-import com.baidu.dsp.common.exception.AccessDeniedException;
-import com.baidu.ub.common.commons.ThreadContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 判断用户是否具有请求方法的访问权
@@ -42,9 +41,7 @@ public class RoleResourceAspect {
      *
      * @param pjp            方法
      * @param requestMapping 方法上的annotation
-     *
      * @return
-     *
      * @throws Throwable
      */
     @Around("anyPublicMethod() && @annotation(requestMapping) && !@annotation(com.baidu.dsp.common.annotation.NoAuth)")
@@ -121,7 +118,6 @@ public class RoleResourceAspect {
      * @param url
      * @param method
      * @param userRoleId
-     *
      * @return
      */
     private boolean isMethodAccessible(String url, RequestMethod method, Integer userRoleId) {
@@ -140,7 +136,6 @@ public class RoleResourceAspect {
      *
      * @param url
      * @param method
-     *
      * @return
      */
     private List<Integer> getPriviledgedRoles(String url, RequestMethod method) {

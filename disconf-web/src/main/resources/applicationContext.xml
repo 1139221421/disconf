@@ -1,22 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/aop
-        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd   
-        http://www.springframework.org/schema/beans   
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
-        http://www.springframework.org/schema/context   
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+
+
+
         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
-    <mvc:annotation-driven/>
-    <context:component-scan base-package="com.baidu"/>
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!--<mvc:annotation-driven/>-->
+    <!--<context:component-scan base-package="com.baidu"/>-->
+    <!--<aop:aspectj-autoproxy proxy-target-class="true"/>-->
 
     <!-- 定时器开关 -->
     <task:annotation-driven executor="proExecutor"
@@ -28,7 +23,7 @@
     <import resource="classpath*:myconfig/spring-servlet-validator.xml"/>
 
     <!-- 拦截器配置 -->
-    <import resource="classpath*:myconfig/spring-servlet-interceptor.xml"/>
+    <!--<import resource="classpath*:myconfig/spring-servlet-interceptor.xml"/>-->
 
     <!-- configs -->
     <bean id="propertyConfigurerForProject1"
@@ -39,11 +34,10 @@
         <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
             <list>
-                <value>classpath*:/jdbc-mysql.properties</value>
-                <value>classpath*:/application.properties</value>
-                <value>classpath*:/zoo.properties</value>
-                <value>classpath*:/redis-config.properties</value>
-                <value>classpath*:/application.properties</value>
+                <value>classpath*:/myconfig/jdbc-mysql.properties</value>
+                <value>classpath*:/myconfig/log4j.properties</value>
+                <value>classpath*:/myconfig/zoo.properties</value>
+                <value>classpath*:/myconfig/redis-config.properties</value>
             </list>
         </property>
     </bean>
@@ -62,45 +56,18 @@
         <property name="emailPort" value="${EMAIL_PORT}"/>
         <property name="fromEmail" value="${DEFAULT_FROM_EMAIL}"/>
         <property name="emailReceiver" value="${EMAIL_RECEIVER}"/>
-        <property name="emailMonitorOn" value="${EMAIL_MONITOR_ON}"/>
-        <property name="checkConsistencyOn" value="${CHECK_CONSISTENCY_ON}"/>
-        <property name="domain" value="${domain}"/>
+        <!--<property name="emailMonitorOn" value="${EMAIL_MONITOR_ON}"/>-->
+        <!--<property name="checkConsistencyOn" value="${CHECK_CONSISTENCY_ON}"/>-->
+        <!--<property name="domain" value="${domain}"/>-->
     </bean>
+
 
     <!-- import -->
     <import resource="classpath*:myconfig/applicationContext-cache.xml"/>
     <import resource="classpath*:myconfig/applicationContext-springcache.xml"/>
-
-    <!-- profile -->
-    <beans profile="db-test">
-        <import resource="classpath*:applicationContext-dbconfig-test.xml"/>
-        <bean id="loginRedisLogin" class="com.baidu.disconf.web.web.auth.login.impl.RedisLoginImplMock"/>
+        <import resource="classpath*:myconfig/applicationContext-dbconfig.xml"/>
+    <bean id="loginRedisLogin" class="com.baidu.disconf.web.web.auth.login.impl.RedisLoginImpl"/>
         <bean id="roleResourceAspect"
               class="com.baidu.disconf.web.service.roleres.service.RoleResourceAspectMock"/>
-        <bean id="zookeeperDriver" class="com.baidu.disconf.web.innerapi.zookeeper.impl.ZookeeperDriverMock"/>
-    </beans>
-
-    <beans profile="db-normal">
-        <import resource="classpath*:myconfig/applicationContext-dbconfig.xml"/>
-        <bean id="loginRedisLogin" class="com.baidu.disconf.web.web.auth.login.impl.RedisLoginImpl"/>
-        <bean id="roleResourceAspect" class="com.baidu.disconf.web.service.roleres.service.RoleResourceAspect"/>
         <bean id="zookeeperDriver" class="com.baidu.disconf.web.innerapi.zookeeper.impl.ZookeeperDriverImpl"/>
-    </beans>
-
-    <beans profile="production">
-        <import resource="classpath*:myconfig/applicationContext-dbconfig.xml"/>
-        <bean id="loginRedisLogin" class="com.baidu.disconf.web.web.auth.login.impl.RedisLoginImpl"/>
-        <bean id="roleResourceAspect" class="com.baidu.disconf.web.service.roleres.service.RoleResourceAspect"/>
-        <bean id="zookeeperDriver" class="com.baidu.disconf.web.innerapi.zookeeper.impl.ZookeeperDriverImpl"/>
-    </beans>
-
-    <beans profile="rd">
-        <import resource="classpath*:myconfig/applicationContext-dbconfig.xml"/>
-        <bean id="loginRedisLogin" class="com.baidu.disconf.web.web.auth.login.impl.RedisLoginImplMock"/>
-        <bean id="roleResourceAspect"
-              class="com.baidu.disconf.web.service.roleres.service.RoleResourceAspectMock"/>
-        <bean id="zookeeperDriver" class="com.baidu.disconf.web.innerapi.zookeeper.impl.ZookeeperDriverMock"/>
-    </beans>
-
-
 </beans>

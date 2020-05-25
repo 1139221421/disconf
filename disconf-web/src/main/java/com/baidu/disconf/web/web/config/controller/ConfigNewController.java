@@ -1,8 +1,16 @@
 package com.baidu.disconf.web.web.config.controller;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
+import com.baidu.disconf.core.common.constants.DisConfigTypeEnum;
+import com.baidu.disconf.web.service.config.form.ConfCopyItemForm;
+import com.baidu.disconf.web.service.config.form.ConfNewForm;
+import com.baidu.disconf.web.service.config.form.ConfNewItemForm;
+import com.baidu.disconf.web.service.config.service.ConfigMgr;
+import com.baidu.disconf.web.web.config.validator.ConfigValidator;
+import com.baidu.disconf.web.web.config.validator.FileUploadValidator;
+import com.baidu.dsp.common.constant.WebConstants;
+import com.baidu.dsp.common.controller.BaseController;
+import com.baidu.dsp.common.exception.FileUploadException;
+import com.baidu.dsp.common.vo.JsonObjectBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,20 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.baidu.disconf.core.common.constants.DisConfigTypeEnum;
-import com.baidu.disconf.web.service.config.form.ConfNewForm;
-import com.baidu.disconf.web.service.config.form.ConfNewItemForm;
-import com.baidu.disconf.web.service.config.service.ConfigMgr;
-import com.baidu.disconf.web.web.config.validator.ConfigValidator;
-import com.baidu.disconf.web.web.config.validator.FileUploadValidator;
-import com.baidu.dsp.common.constant.WebConstants;
-import com.baidu.dsp.common.controller.BaseController;
-import com.baidu.dsp.common.exception.FileUploadException;
-import com.baidu.dsp.common.vo.JsonObjectBase;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * 专用于配置新建
- *
  * @author liaoqiqi
  * @version 2014-6-24
  */
@@ -47,9 +46,7 @@ public class ConfigNewController extends BaseController {
 
     /**
      * 配置项的新建
-     *
      * @param confNewForm
-     *
      * @return
      */
     @RequestMapping(value = "/item", method = RequestMethod.POST)
@@ -67,10 +64,8 @@ public class ConfigNewController extends BaseController {
 
     /**
      * 配置文件的新建(使用上传配置文件)
-     *
      * @param confNewForm
      * @param file
-     *
      * @return
      */
     @ResponseBody
@@ -117,17 +112,14 @@ public class ConfigNewController extends BaseController {
 
     /**
      * 配置文件的新建(使用文本)
-     *
      * @param confNewForm
      * @param fileContent
      * @param fileName
-     *
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/filetext", method = RequestMethod.POST)
-    public JsonObjectBase updateFileWithText(@Valid ConfNewForm confNewForm, @NotNull String fileContent,
-                                             @NotNull String fileName) {
+    public JsonObjectBase updateFileWithText(@Valid ConfNewForm confNewForm, @NotNull String fileContent, @NotNull String fileName) {
 
         LOG.info(confNewForm.toString());
 
@@ -143,5 +135,22 @@ public class ConfigNewController extends BaseController {
         configMgr.newConfig(confNewItemForm, DisConfigTypeEnum.FILE);
 
         return buildSuccess("创建成功");
+    }
+
+    /**
+     * 配置项的复制
+     * @param confCopyItemForm
+     * @return
+     */
+    @RequestMapping(value = "/copy", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonObjectBase copy(@Valid ConfCopyItemForm confCopyItemForm) {
+
+        // 业务校验
+         configValidator.validateCopy(confCopyItemForm);
+        //复制
+        configMgr.copyConfig(confCopyItemForm);
+
+        return buildSuccess("复制成功");
     }
 }
