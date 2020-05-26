@@ -30,14 +30,6 @@
             <version>${disconf-core.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.baidu.disconf</groupId>
-            <artifactId>disconf-core</artifactId>
-            <version>${disconf-core.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
         <!-- common dependencies -->
         <dependency>
             <groupId>commons-collections</groupId>
