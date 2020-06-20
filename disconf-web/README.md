@@ -1,3 +1,62 @@
+#改版后修改启动参数 vm options
+-Ddb.host=localhost -Ddb.port=3306 -Ddb.username=root -Ddb.password=123456 -Dredis.host1=localhost -Dredis.port1=6379 -Dredis.password1=123456 -Dredis.host2=localhost -Dredis.port2=6379 -Dredis.password2=123456 -Dzk=localhost:2181
+# 改版后部署web打包
+- cd disconf-web
+- mvn clean
+- mvn package install -Dmaven.test.skip=true -Prelease -U
+
+### 服务器脚本部署
+##### build_java.sh
+
+运行脚本
+```
+#/opt/datas/disconf_deploy/disconf:是项目存放位置
+#后面是vm options，注意修改参数
+sh build_java.sh /opt/datas/disconf_deploy/disconf '-Ddb.host=localhost -Ddb.port=3306 -Ddb.username=root -Ddb.password=123456 -Dredis.host1=localhost -Dredis.port1=6379 -Dredis.password1=123456 -Dredis.host2=localhost -Dredis.port2=6379 -Dredis.password2=123456 -Dzk=localhost:2181'
+```
+脚本内容
+```
+#!/bin/bash
+PROJECT_PATH=$1
+JAVA_OPTIONS=$2
+if [ $# -le 0 ];then
+        echo "please set project path"
+        exit 1
+else
+        pwd
+        if [ ! -d "$PROJECT_PATH" ];then
+                echo "clone project ..."
+                git clone -b lxl git://github.com/1139221421/disconf.git --depth 1
+        fi
+        echo "pull project ..."
+        cd $PROJECT_PATH
+        git pull origin lxl
+
+        echo "package core ..."
+        cd $PROJECT_PATH/disconf-core
+        mvn clean
+        mvn package install -Dmaven.test.skip=true -Prelease -U
+
+        echo "package web..."
+        cd $PROJECT_PATH/disconf-web
+        mvn clean
+        mvn package install -Dmaven.test.skip=true -Prelease -U
+fi
+cd target
+echo '' > nohup.out
+PORT=`ps aux|grep disconf-web.jar |grep -v grep | awk '{print $2}'`
+echo $PORT
+kill -9 $PORT
+echo "starting project ..."
+echo "JAVA_OPTIONS: $JAVA_OPTIONS"
+nohup java $JAVA_OPTIONS -server -Xms128m -Xmx128m -verbose:gc -Xloggc:gc_disconf-web.log -jar disconf-web.jar > disconf-web.log 2>&1 &
+echo "start project finish ..."
+```
+
+
+
+
+
 disconf-web 
 ===========
 
