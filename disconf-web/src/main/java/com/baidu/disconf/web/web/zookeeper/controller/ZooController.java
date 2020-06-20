@@ -122,7 +122,7 @@ public class ZooController extends BaseController {
     }
 
     public static void main(String[] args)throws Exception {
-        String url="118.24.101.162:2181";
+        String url="localhost:2181";
         String prefix="/disconf/file_0.0.1_rd";
 
         ZookeeperMgr instance = ZookeeperMgr.getInstance();
